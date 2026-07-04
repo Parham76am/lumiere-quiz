@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lumière Gray-Coverage Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{
+  --bg:#EFE7E2; --ground:#F7F3F1; --surface:#FFFFFF; --surface-2:#FBF7F5;
+  --ink:#2A2320; --muted:#7A6E68; --hair:#E4D8D2; --hair-2:#EEE6E1;
+  --accent:#7A2E48; --accent-press:#5E2138; --accent-soft:#F3E4E9; --accent-ink:#7A2E48;
+  --olive:#5C6B4C; --olive-soft:#EAEDE2; --gold:#B0894F;
+  --good:#4E8C63; --warn:#C08A2E; --crit:#B4573F;
+  --shadow:0 1px 2px rgba(42,35,32,.05), 0 12px 34px -14px rgba(42,35,32,.22);
+  --shadow-sm:0 1px 2px rgba(42,35,32,.06), 0 6px 16px -10px rgba(42,35,32,.18);
+  --r:18px; --r-sm:13px; --r-pill:999px;
+  --font-display:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --maxw:462px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#100C0B; --ground:#171210; --surface:#211A18; --surface-2:#1B1513;
+    --ink:#F2E9E4; --muted:#AC9C93; --hair:#332723; --hair-2:#2A211D;
+    --accent:#D08AA2; --accent-press:#E0A2B6; --accent-soft:#33222A; --accent-ink:#E7AABC;
+    --olive:#A7B58C; --olive-soft:#242A1E; --gold:#C9A163;
+    --good:#6FB588; --warn:#D6A34E; --crit:#D8785E;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.6);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#EFE7E2; --ground:#F7F3F1; --surface:#FFFFFF; --surface-2:#FBF7F5;
+  --ink:#2A2320; --muted:#7A6E68; --hair:#E4D8D2; --hair-2:#EEE6E1;
+  --accent:#7A2E48; --accent-press:#5E2138; --accent-soft:#F3E4E9; --accent-ink:#7A2E48;
+  --olive:#5C6B4C; --olive-soft:#EAEDE2; --gold:#B0894F;
+  --good:#4E8C63; --warn:#C08A2E; --crit:#B4573F;
+  --shadow:0 1px 2px rgba(42,35,32,.05), 0 12px 34px -14px rgba(42,35,32,.22);
+  --shadow-sm:0 1px 2px rgba(42,35,32,.06), 0 6px 16px -10px rgba(42,35,32,.18);
+}
+:root[data-theme="dark"]{
+  --bg:#100C0B; --ground:#171210; --surface:#211A18; --surface-2:#1B1513;
+  --ink:#F2E9E4; --muted:#AC9C93; --hair:#332723; --hair-2:#2A211D;
+  --accent:#D08AA2; --accent-press:#E0A2B6; --accent-soft:#33222A; --accent-ink:#E7AABC;
+  --olive:#A7B58C; --olive-soft:#242A1E; --gold:#C9A163;
+  --good:#6FB588; --warn:#D6A34E; --crit:#D8785E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -16px rgba(0,0,0,.6);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4), 0 8px 20px -12px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font-body); color:var(--ink); line-height:1.5;
+  background:
+    radial-gradient(120% 60% at 50% -10%, color-mix(in srgb, var(--accent) 10%, var(--bg)) 0%, var(--bg) 60%),
+    var(--bg);
+  min-height:100dvh; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
+  background:var(--ground); box-shadow:var(--shadow); position:relative;}
+@media (min-width:520px){ .wrap{margin:22px auto;min-height:min(880px,calc(100dvh - 44px));border-radius:26px;overflow:hidden;} body{padding:0} }
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--ground) 88%, transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--hair);padding:12px 18px 10px;}
+.top-row{display:flex;align-items:center;gap:10px;min-height:26px}
+.back{appearance:none;border:0;background:transparent;color:var(--muted);font-size:22px;line-height:1;
+  cursor:pointer;padding:2px 6px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s}
+.back.show{opacity:1;pointer-events:auto}
+.back:hover{color:var(--ink)}
+.wordmark{font-family:var(--font-display);font-size:20px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);flex:1;text-align:center;font-weight:400}
+.wordmark b{color:var(--accent-ink);font-weight:400}
+.icbtn{appearance:none;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:15px;padding:4px 6px;border-radius:8px}
+.icbtn:hover{color:var(--ink)}
+.progress{height:5px;background:var(--hair);border-radius:999px;margin-top:10px;overflow:hidden}
+.progress > i{display:block;height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 55%, var(--gold)));
+  transition:width .5s cubic-bezier(.4,0,.2,1)}
+.stepno{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-top:6px;font-variant-numeric:tabular-nums}
+
+/* screen */
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.pad{padding:22px 20px 30px;display:flex;flex-direction:column;min-height:100%}
+.anim{animation:rise .42s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.anim{animation:none}.progress>i{transition:none}}
+
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 10px}
+h1.q{font-family:var(--font-display);font-weight:400;font-size:26px;line-height:1.18;letter-spacing:-.01em;
+  margin:0 0 8px;text-wrap:balance;color:var(--ink)}
+.sub{color:var(--muted);font-size:15px;margin:0 0 18px;text-wrap:pretty}
+.why{display:flex;gap:8px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--hair);
+  border-radius:12px;padding:11px 13px;color:var(--muted);font-size:13px;margin-top:14px}
+.why b{color:var(--ink);font-weight:600}
+.spacer{flex:1;min-height:8px}
+
+/* option tiles */
+.tiles{display:flex;flex-direction:column;gap:11px;margin-top:2px}
+.tile{display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;
+  background:var(--surface);border:1.5px solid var(--hair);border-radius:var(--r-sm);padding:15px 15px;
+  color:var(--ink);font-family:inherit;font-size:16px;transition:border-color .16s,background .16s,transform .1s,box-shadow .16s;
+  box-shadow:var(--shadow-sm)}
+.tile:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--hair))}
+.tile:active{transform:scale(.99)}
+.tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tile.sel{border-color:var(--accent);background:var(--accent-soft)}
+.tile .emoji{font-size:22px;line-height:1;width:30px;text-align:center;flex:none}
+.tile .body{flex:1;min-width:0}
+.tile .lab{display:block;font-weight:600;letter-spacing:-.005em}
+.tile .desc{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
+.tile.sel .desc{color:color-mix(in srgb,var(--muted) 55%,var(--ink))}
+.tile .chev{color:var(--muted);font-size:15px;flex:none}
+.tile .check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--hair);flex:none;display:grid;place-items:center;color:#fff;font-size:13px}
+.tile.sel .check{background:var(--accent);border-color:var(--accent)}
+.swatch{width:26px;height:26px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.08)}
+
+/* buttons */
+.cta{appearance:none;border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:16.5px;
+  color:#fff;background:var(--accent);border-radius:var(--r-pill);padding:16px 20px;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 10px 24px -10px color-mix(in srgb,var(--accent) 70%,transparent);
+  transition:background .16s,transform .1s}
+.cta:hover{background:var(--accent-press)}
+.cta:active{transform:translateY(1px)}
+.cta:disabled{opacity:.42;cursor:not-allowed}
+.cta:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.cta .sub2{display:block}
+.cta-note{text-align:center;color:var(--muted);font-size:12.5px;margin-top:10px}
+.ghost{background:transparent;color:var(--muted);box-shadow:none;font-weight:600;font-size:14px;padding:10px}
+.ghost:hover{background:transparent;color:var(--ink)}
+
+/* start screen */
+.hero-media{border-radius:var(--r);overflow:hidden;border:1px solid var(--hair);background:var(--surface-2);margin:4px 0 18px;position:relative}
+.ba{display:grid;grid-template-columns:1fr 1fr;aspect-ratio:16/10}
+.ba > div{display:flex;align-items:flex-end;justify-content:center;padding:12px;position:relative;color:#fff;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.ba .before{background:linear-gradient(160deg,#9a9a98,#6f6e6c)}
+.ba .after{background:linear-gradient(160deg,#6d3c2a,#3f2118)}
+.ba .tag{background:rgba(0,0,0,.32);padding:4px 9px;border-radius:999px;backdrop-filter:blur(2px)}
+.ba .ph{position:absolute;top:10px;left:10px;font-size:10px;opacity:.85;letter-spacing:.05em;text-transform:none;font-weight:500}
+.trust{display:flex;flex-direction:column;gap:7px;margin-top:16px}
+.stars{color:var(--gold);letter-spacing:2px;font-size:14px}
+.trust .row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.trust .row b{color:var(--ink);font-weight:600}
+.legal{font-size:11px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.5}
+.legal a{color:var(--muted);text-decoration:underline}
+
+/* interstitial */
+.inter-emoji{font-size:30px;margin-bottom:6px}
+.inter h1{font-family:var(--font-display);font-weight:400;font-size:25px;line-height:1.2;margin:0 0 12px;text-wrap:balance}
+.inter p{font-size:15.5px;color:var(--ink);margin:0 0 13px;line-height:1.55}
+.inter p.soft{color:var(--muted);font-size:14.5px}
+.punch{font-weight:700;color:var(--accent-ink)}
+.callout{display:flex;gap:11px;align-items:flex-start;background:var(--olive-soft);border:1px solid color-mix(in srgb,var(--olive) 30%,var(--hair));
+  border-radius:14px;padding:14px 15px;margin-top:6px}
+.callout .e{font-size:20px;flex:none}
+.callout b{color:var(--ink)}
+.callout p{margin:0;font-size:14.5px;color:color-mix(in srgb,var(--ink) 80%,var(--olive))}
+.refill{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 26%,var(--hair));border-radius:14px;padding:14px 15px;margin:4px 0 6px}
+.refill .lab{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:6px}
+.refill p{margin:0;font-size:15px;color:var(--ink)}
+
+/* expert quote */
+.expert{display:flex;gap:13px;align-items:center;background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:14px;margin-top:14px;box-shadow:var(--shadow-sm)}
+.expert .av{width:52px;height:52px;border-radius:50%;flex:none;background:linear-gradient(150deg,#c9b7ad,#8a6f62);display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:20px}
+.expert q{display:block;font-size:14px;line-height:1.5;color:var(--ink);font-style:italic}
+.expert .who{font-size:12px;color:var(--muted);margin-top:6px}
+.expert .who b{color:var(--ink);font-weight:600;font-style:normal}
+
+/* loader */
+.loader{display:flex;flex-direction:column;justify-content:center;flex:1;padding:8px 4px}
+.load-title{font-family:var(--font-display);font-size:23px;text-align:center;margin:0 0 22px}
+.lstep{display:flex;align-items:center;gap:12px;padding:12px 4px;font-size:15px;color:var(--muted);opacity:.4;transition:opacity .35s,color .35s}
+.lstep.on{opacity:1;color:var(--ink)}
+.lstep .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--hair);flex:none;display:grid;place-items:center;color:#fff;font-size:13px;transition:background .35s,border-color .35s}
+.lstep.done .dot{background:var(--olive);border-color:var(--olive)}
+.lstep.on:not(.done) .dot{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.lstep.on:not(.done) .dot{animation:none}}
+.lbar{height:6px;background:var(--hair);border-radius:999px;margin-top:22px;overflow:hidden}
+.lbar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .3s linear}
+
+/* results */
+.res-hero{text-align:center;padding:6px 0 4px}
+.res-hero .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--olive);background:var(--olive-soft);border:1px solid color-mix(in srgb,var(--olive) 30%,var(--hair));padding:6px 12px;border-radius:999px;margin-bottom:12px}
+.res-hero h1{font-family:var(--font-display);font-weight:400;font-size:27px;margin:0 0 4px;line-height:1.15;text-wrap:balance}
+.res-hero p{color:var(--muted);font-size:14.5px;margin:0}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);padding:16px;margin-top:16px;box-shadow:var(--shadow-sm)}
+.card h3{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:700}
+.profile-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--hair-2);font-size:14.5px}
+.profile-row:first-of-type{border-top:0}
+.profile-row .k{color:var(--muted)}
+.profile-row .v{font-weight:600;text-align:right;display:flex;align-items:center;gap:7px}
+.dot-sev{width:9px;height:9px;border-radius:50%;flex:none}
+.tl{display:flex;flex-direction:column;gap:0;margin-top:2px}
+.tl .row{display:flex;gap:13px}
+.tl .rail{display:flex;flex-direction:column;align-items:center;flex:none}
+.tl .node{width:15px;height:15px;border-radius:50%;background:var(--accent);margin-top:4px;box-shadow:0 0 0 4px var(--accent-soft)}
+.tl .line{width:2px;flex:1;background:var(--hair);min-height:14px}
+.tl .row:last-child .line{display:none}
+.tl .txt{padding-bottom:16px}
+.tl .when{font-weight:700;font-size:14px;color:var(--accent-ink)}
+.tl .what{font-size:14px;color:var(--ink);margin-top:2px;line-height:1.45}
+.mech p{margin:0;font-size:15px;line-height:1.55}
+.tbl-wrap{overflow-x:auto;margin-top:2px;border-radius:12px;border:1px solid var(--hair)}
+table.cmp{border-collapse:collapse;width:100%;font-size:13px;min-width:420px}
+table.cmp th,table.cmp td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--hair-2)}
+table.cmp thead th{background:var(--surface-2);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+table.cmp thead th:first-child{text-align:left}
+table.cmp tbody{}
+table.cmp td:first-child,table.cmp th:first-child{text-align:left;color:var(--ink);font-weight:600;position:sticky;left:0;background:var(--surface)}
+table.cmp thead th:first-child{background:var(--surface-2)}
+table.cmp .brand{color:var(--accent-ink);font-weight:800}
+table.cmp tr:last-child td{border-bottom:0}
+.yes{color:var(--good);font-weight:700}
+.no{color:var(--crit);font-weight:700}
+.mid{color:var(--muted)}
+.guarantee{display:flex;gap:12px;align-items:flex-start;background:var(--olive-soft);border:1px solid color-mix(in srgb,var(--olive) 28%,var(--hair));border-radius:var(--r);padding:16px;margin-top:16px}
+.guarantee .e{font-size:24px;flex:none}
+.guarantee b{color:var(--ink)}
+.guarantee p{margin:4px 0 0;font-size:13.5px;color:color-mix(in srgb,var(--ink) 78%,var(--olive))}
+.offer{background:linear-gradient(180deg,var(--surface),var(--surface-2));border:1.5px solid color-mix(in srgb,var(--accent) 30%,var(--hair));border-radius:var(--r);padding:18px;margin-top:16px;box-shadow:var(--shadow)}
+.offer h3{color:var(--accent-ink);text-align:center}
+.offer ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.offer li{display:flex;gap:10px;font-size:14.5px;align-items:flex-start}
+.offer li .c{color:var(--olive);font-weight:800;flex:none}
+.offer li b{font-weight:700}
+.urg{display:flex;gap:10px;align-items:flex-start;border-radius:12px;padding:12px 13px;margin-top:15px;font-size:13.5px;border:1px solid}
+.urg.fast{background:color-mix(in srgb,var(--crit) 12%,var(--surface));border-color:color-mix(in srgb,var(--crit) 30%,var(--hair));color:var(--ink)}
+.urg.time{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 26%,var(--hair));color:var(--ink)}
+.urg.now{background:var(--olive-soft);border-color:color-mix(in srgb,var(--olive) 28%,var(--hair));color:var(--ink)}
+.urg b{font-weight:700}
+.scarce{text-align:center;font-size:12px;color:var(--crit);margin-top:12px}
+.sticky-cta{position:sticky;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,transparent, var(--ground) 32%);z-index:15}
+.footnote{font-size:10.5px;color:var(--muted);text-align:center;margin-top:22px;opacity:.85;line-height:1.5}
+.reassure-num{font-family:var(--font-display);font-size:40px;color:var(--accent-ink);line-height:1;margin:2px 0 4px}
+.pill-stat{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--hair);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;margin-top:6px;box-shadow:var(--shadow-sm)}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <button class="back" id="back" aria-label="Go back">‹</button>
+      <div class="wordmark">LUMI<b>È</b>RE</div>
+      <button class="icbtn" id="theme" aria-label="Toggle light or dark">◐</button>
+    </div>
+    <div class="progress" id="progwrap" style="display:none"><i id="prog"></i></div>
+    <div class="stepno" id="stepno" style="display:none"></div>
+  </header>
+  <main class="screen" id="screen" tabindex="-1"></main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var screenEl=$('#screen'), progWrap=$('#progwrap'), progEl=$('#prog'), stepEl=$('#stepno'), backEl=$('#back');
+
+/* ---------- state + history ---------- */
+var state={};
+var hist=[];
+var current=null;
+
+/* ---------- concern content ---------- */
+var CONCERN={
+  fade:{label:"Fades, roots back fast",noun:"fading coverage",sevQ:"How fast does your coverage fade?",
+    sev:{mild:"It holds a couple of weeks before the gray creeps back.",
+         moderate:"Within a week the gray is showing again at my part.",
+         severe:"A wash or two, and the gray is basically back."},
+    mechTitle:"Here is why it never lasts.",
+    mechBody:"Most gray shampoos just coat the outside of the strand, so every wash rinses more away and the gray creeps back. Box dye goes the other way, cracking the strand open with peroxide to force color in. That holds longer, but it leaves a hard line at your roots and a strand so damaged the color fades unevenly anyway.",
+    mechPunch:"The color was never really locked into your hair.",
+    resFix:"Lumière's plant pigment binds to the strand and layers with every wash, so coverage builds and holds instead of rinsing out, and new growth blends in softly with no hard root line."},
+  cover:{label:"Won't cover stubborn grays",noun:"stubborn grays",sevQ:"How stubborn are your grays?",
+    sev:{mild:"A few stubborn grays resist, the rest take fine.",
+         moderate:"The wiry grays around my part and temples never fully take.",
+         severe:"Most of my gray barely covers, no matter what I use."},
+    mechTitle:"Here is why the wiry grays resist.",
+    mechBody:"Stubborn gray is coarse, and its cuticle sits tight and closed, so a surface shampoo cannot lay down enough pigment to cover it. Harsh box dye tries to force its way in with peroxide, which over-processes the rest of your hair just to catch those few grays.",
+    mechPunch:"You should not have to fry your whole head to catch the stubborn ones.",
+    resFix:"Because coverage builds a little with every wash, even the wiry, resistant grays around your part and temples fill in gradually over time, instead of being left behind."},
+  brass:{label:"Turns orange or brassy",noun:"brassy tones",sevQ:"How brassy does it get?",
+    sev:{mild:"A slightly warm tone in certain light.",
+         moderate:"Clearly warm or orange within a week or two.",
+         severe:"It goes orange almost right away and never looks like me."},
+    mechTitle:"Here is why it always turns orange.",
+    mechBody:"Oxidative box and salon dyes lift and bleach the strand before they deposit color. As that harsh color fades on damaged hair, the warm undertones underneath show through, and gray grabs them worst of all. That is the brass, and the orange.",
+    mechPunch:"Brass is a symptom of a stripped, oxidized strand.",
+    resFix:"There is no lift and no oxidation, so there is nothing to turn warm. Lumière lays down true-to-tone plant pigment that reads like your real color on gray. No orange, no brass, no helmet."},
+  damage:{label:"Left my hair dry and damaged",noun:"dye damage",sevQ:"How damaged is your hair?",
+    sev:{mild:"A little dryness at the ends.",
+         moderate:"Noticeably dry and rough, it lost its softness and shine.",
+         severe:"Straw-like, brittle and snapping. Years of dye wrecked it."},
+    mechTitle:"Here is what the dye did to your hair.",
+    mechBody:"To lift the gray, dye uses peroxide and ammonia to crack the strand open and bleach it. They do not stop at the gray. They burn through the protein that holds the strand together, and the inside goes hollow, like a straw. That hollow strand is why dyed hair turns dry, brittle, and snaps off in the brush.",
+    mechPunch:"The damage is the dye, not your hair.",
+    resFix:"Every wash lays plant pigment over the gray while liquid keratin and collagen flood the hollow strand and pack it back out. You cover the gray and rebuild the hair in the same wash, so it comes out stronger than it went in."},
+  scalp:{label:"Irritates my scalp, or scares me",noun:"scalp irritation",sevQ:"How does your scalp react to dye?",
+    sev:{mild:"A little tingle or itch while it is on.",
+         moderate:"Real itching or burning, and I dread the irritation after.",
+         severe:"My scalp reacts badly every time, and I worry about the chemicals."},
+    mechTitle:"Here is what is really irritating your scalp.",
+    mechBody:"The ingredient that actually makes the color is PPD, the number one cause of hair-dye allergic reactions. Add resorcinol and ammonia, and the itching, the burning, the tight sore scalp all make sense. Europe caps how much PPD a bottle can hold, and almost no brand prints the name on the front.",
+    mechPunch:"The itch has a name, and it is PPD.",
+    resFix:"Lumière has no PPD, no resorcinol, no peroxide, and no ammonia. Just plant pigment and soothing botanicals like aloe, so you cover the gray without the burn or the fear."}
+};
+var REFILL="Lumière works the other way. It lays plant pigment on top to cover the gray, then pushes liquid keratin and collagen inside to pack the hollow strand back out. You get the color, with none of the bleach, and hair that comes out stronger than it went in.";
+
+var GRAY={
+  start:{label:"Just starting (a few grays)"},
+  salt:{label:"Salt and pepper"},
+  half:{label:"More than half gray"},
+  full:{label:"Fully gray or white"}
+};
+var SHADES={
+  black:{label:"Black",c:"#1c1a19"},
+  darkbrown:{label:"Dark brown",c:"#3b2a20"},
+  mediumbrown:{label:"Medium brown",c:"#6a4a32"},
+  lightbrown:{label:"Light brown",c:"#987354"},
+  auburn:{label:"Auburn / red",c:"#7a3b2a"}
+};
+
+/* ---------- flow definition ---------- */
+var SCREENS={
+  start:{type:'start',p:0},
+  gender:{type:'single',p:8,key:'gender',eyebrow:'Your gray-coverage plan',q:'First, who are we building this for?',
+    options:[{v:'f',emoji:'👩',lab:'I am a woman'},{v:'m',emoji:'👨',lab:'I am a man'}],next:'age'},
+  age:{type:'single',p:15,key:'age',q:'How old are you?',
+    why:'<b>Why we ask:</b> your age helps us set a realistic coverage timeline for your hair.',
+    options:[{v:'u35',lab:'Under 35'},{v:'35',lab:'35 to 44'},{v:'45',lab:'45 to 54'},{v:'55',lab:'55 to 64'},{v:'65',lab:'65 or older'}],next:'frustration'},
+  frustration:{type:'single',p:23,key:'frustration',q:'What bothers you most about covering your gray right now?',
+    options:[
+      {v:'fade',emoji:'💧',lab:'It fades, my roots come back fast',desc:'You color it, and a week later the gray is peeking through'},
+      {v:'cover',emoji:'⚪',lab:'It never covers my stubborn grays',desc:'The wiry, resistant grays at my part and temples still show'},
+      {v:'brass',emoji:'🍊',lab:'It turns orange or brassy',desc:'The color goes warm and off, never my real shade'},
+      {v:'damage',emoji:'🌾',lab:'It left my hair dry and damaged',desc:'Years of dye made it straw-like, dry and breaking'},
+      {v:'scalp',emoji:'🔥',lab:'It irritates my scalp, or scares me',desc:'Itching, burning, or worry about the chemicals'}
+    ],next:'severity'},
+  severity:{type:'single',p:31,key:'severity',
+    q:function(){return CONCERN[state.frustration].sevQ;},
+    why:'<b>Why we ask:</b> this tells us how much coverage-building your plan needs, and how fast to expect it.',
+    options:function(){var c=CONCERN[state.frustration].sev;return [
+      {v:'mild',lab:'Mild',desc:c.mild},{v:'moderate',lab:'Moderate',desc:c.moderate},{v:'severe',lab:'Severe',desc:c.severe}];},
+    next:'graylevel'},
+  graylevel:{type:'single',p:38,key:'graylevel',q:'How much gray are you covering?',
+    why:'<b>Why we ask:</b> the amount of gray sets how many washes it takes to reach full, even coverage.',
+    options:[{v:'start',emoji:'🌱',lab:'Just starting',desc:'A few grays coming through'},
+      {v:'salt',emoji:'🧂',lab:'Salt and pepper',desc:'Mixed through, clearly visible'},
+      {v:'half',emoji:'🌗',lab:'More than half gray'},
+      {v:'full',emoji:'🤍',lab:'Fully gray or white'}],next:'hairtype'},
+  hairtype:{type:'single',p:45,key:'hairtype',q:'What is your hair type?',
+    options:[{v:'straight',emoji:'💇‍♀️',lab:'Straight'},{v:'wavy',emoji:'🌊',lab:'Wavy'},{v:'curly',emoji:'🌀',lab:'Curly'},{v:'coily',emoji:'🧬',lab:'Coily'}],next:'mechanism'},
+  mechanism:{type:'mechanism',p:50,next:'tried'},
+  tried:{type:'multi',p:57,key:'tried',q:'What have you used to cover your gray so far?',sub:'Select all that apply.',
+    options:[{v:'box',emoji:'📦',lab:'Box dye at home'},{v:'salon',emoji:'💈',lab:'Salon color'},
+      {v:'spray',emoji:'🪄',lab:'Root touch-up spray or powder'},{v:'grayshampoo',emoji:'🧴',lab:'A gray-coverage shampoo (like Polar)'},
+      {v:'henna',emoji:'🌿',lab:'Henna'},{v:'none',emoji:'🚫',lab:'Nothing yet'}],next:'dyeproblems'},
+  dyeproblems:{type:'single',p:63,key:'dyeproblems',q:'Has dyeing ever caused you problems?',
+    options:[{v:'damage',emoji:'🥀',lab:'Yes, it dried out or damaged my hair'},
+      {v:'scalp',emoji:'😣',lab:'Yes, my scalp itched or reacted'},
+      {v:'upkeep',emoji:'😮‍💨',lab:'The upkeep is exhausting and expensive'},
+      {v:'better',emoji:'✨',lab:'No real problems, I just want a better way'}],next:'reframe'},
+  reframe:{type:'reframe',p:67,next:'routine'},
+  routine:{type:'single',p:72,key:'routine',q:'How much effort do you want gray coverage to take?',
+    why:'<b>Good news:</b> Lumière replaces your shampoo. Coverage builds while you wash, in about three minutes, no gloves, no mess.',
+    options:[{v:'min',emoji:'🛁',lab:'As little as possible'},{v:'few',emoji:'⏳',lab:'A few minutes is fine'},{v:'any',emoji:'💪',lab:'Whatever actually works'}],next:'reassurance'},
+  reassurance:{type:'reassure',p:77,next:'emotion'},
+  emotion:{type:'single',p:83,key:'emotion',
+    q:'Imagine your gray softly covered, your hair softer, no orange, in a couple of weeks. How would that feel?',
+    options:[{v:'me',emoji:'🪞',lab:'Like myself again'},{v:'free',emoji:'🕊️',lab:'My gray not screaming at me every morning'},
+      {v:'conf',emoji:'💃',lab:'Confident again, and done with the salon'},{v:'good',emoji:'☀️',lab:'Just good when I look in the mirror'}],next:'event'},
+  event:{type:'single',p:88,key:'event',q:'Any occasion you would love to look your best for?',
+    options:[{v:'soon',emoji:'📅',lab:'Yes, in the next few weeks'},{v:'months',emoji:'🗓️',lab:'Yes, in 2 to 3 months'},
+      {v:'nostart',emoji:'🚀',lab:'No event, I just want to start'},{v:'daily',emoji:'🌟',lab:'Every day matters to me'}],next:'shade'},
+  shade:{type:'single',p:92,key:'shade',q:'What is your natural, non-gray shade?',sub:'So we can confirm your Lumière shade match.',
+    options:[{v:'black',swatch:SHADES.black.c,lab:'Black'},{v:'darkbrown',swatch:SHADES.darkbrown.c,lab:'Dark brown'},
+      {v:'mediumbrown',swatch:SHADES.mediumbrown.c,lab:'Medium brown'},{v:'lightbrown',swatch:SHADES.lightbrown.c,lab:'Light brown'},
+      {v:'auburn',swatch:SHADES.auburn.c,lab:'Auburn / red'}],next:'sensitivity'},
+  sensitivity:{type:'single',p:96,key:'sensitivity',q:'Do you have a sensitive scalp?',
+    options:[{v:'yes',emoji:'✋',lab:'Yes'},{v:'no',emoji:'👍',lab:'No'},{v:'unsure',emoji:'🤔',lab:'I am not sure'}],next:'qualify'},
+  qualify:{type:'qualify',p:98,next:'loading'},
+  loading:{type:'loader',p:99,next:'results'},
+  results:{type:'results',p:100}
+};
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function el(html){var t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstChild}
+function resolve(v){return typeof v==='function'?v():v}
+
+function setProgress(p){
+  if(p<=0){progWrap.style.display='none';stepEl.style.display='none';return;}
+  progWrap.style.display='block';progEl.style.width=p+'%';
+  stepEl.style.display='block';
+  stepEl.textContent = p>=100 ? 'Your personalized results' : Math.round(p)+'% complete';
+}
+
+/* ---------- renderers ---------- */
+function render(id){
+  current=id;var s=SCREENS[id];
+  setProgress(s.p);
+  backEl.classList.toggle('show',hist.length>0 && id!=='results');
+  screenEl.scrollTop=0;
+  var node;
+  switch(s.type){
+    case 'start': node=renderStart(); break;
+    case 'single': node=renderSingle(s); break;
+    case 'multi': node=renderMulti(s); break;
+    case 'mechanism': node=renderMechanism(s); break;
+    case 'reframe': node=renderReframe(s); break;
+    case 'reassure': node=renderReassure(s); break;
+    case 'qualify': node=renderQualify(s); break;
+    case 'loader': node=renderLoader(s); break;
+    case 'results': node=renderResults(); break;
+  }
+  screenEl.innerHTML='';screenEl.appendChild(node);
+  screenEl.focus({preventScroll:true});
+}
+function go(id){hist.push(current);render(id);}
+function nextOf(s){return resolve(s.next);}
+
+function renderStart(){
+  var n=el('<div class="pad anim"></div>');
+  n.innerHTML=
+    '<p class="eyebrow">Plant-pigment gray coverage</p>'+
+    '<h1 class="q">See how fast Lumière covers your gray. Without a drop of PPD or peroxide.</h1>'+
+    '<p class="sub">Answer a few quick questions and we will build your personal gray-coverage plan: your shade match, what to expect, and how fast you will see it.</p>'+
+    '<div class="hero-media"><div class="ba">'+
+      '<div class="before"><span class="ph">Add photo</span><span class="tag">Before</span></div>'+
+      '<div class="after"><span class="ph">Add photo</span><span class="tag">After · 3 weeks</span></div>'+
+    '</div></div>'+
+    '<div class="trust">'+
+      '<div class="row"><span class="stars">★★★★★</span> <b>Trusted by 40,000+ women</b></div>'+
+      '<div class="row">🌿 <span>PPD-free, peroxide-free, ammonia-free</span></div>'+
+      '<div class="row">🧴 <span>Made for sensitive scalps, covers as you wash</span></div>'+
+    '</div>'+
+    '<div class="spacer"></div>';
+  var cta=el('<button class="cta" style="margin-top:20px">Start my quiz <span aria-hidden="true">→</span></button>');
+  cta.addEventListener('click',function(){go('gender')});
+  n.appendChild(cta);
+  n.appendChild(el('<p class="cta-note">Free · 60 seconds · No email needed</p>'));
+  n.appendChild(el('<p class="legal">By starting the quiz you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>'));
+  return n;
+}
+
+function tileNode(o,opts){
+  var inner='';
+  if(opts.multi){inner+='<span class="check" aria-hidden="true">✓</span>';}
+  else if(o.emoji){inner+='<span class="emoji" aria-hidden="true">'+o.emoji+'</span>';}
+  else if(o.swatch){inner+='<span class="swatch" style="background:'+o.swatch+'"></span>';}
+  inner+='<span class="body"><span class="lab">'+esc(o.lab)+'</span>'+(o.desc?'<span class="desc">'+esc(o.desc)+'</span>':'')+'</span>';
+  if(!opts.multi){inner+='<span class="chev" aria-hidden="true">›</span>';}
+  var b=el('<button class="tile" role="'+(opts.multi?'checkbox':'button')+'" aria-checked="false">'+inner+'</button>');
+  return b;
+}
+
+function renderSingle(s){
+  var n=el('<div class="pad anim"></div>');
+  if(s.eyebrow)n.appendChild(el('<p class="eyebrow">'+esc(s.eyebrow)+'</p>'));
+  n.appendChild(el('<h1 class="q">'+esc(resolve(s.q))+'</h1>'));
+  if(s.sub)n.appendChild(el('<p class="sub">'+esc(s.sub)+'</p>'));
+  var tiles=el('<div class="tiles"></div>');
+  resolve(s.options).forEach(function(o){
+    var b=tileNode(o,{multi:false});
+    b.addEventListener('click',function(){
+      state[s.key]=o.v;
+      Array.prototype.forEach.call(tiles.children,function(c){c.classList.remove('sel');c.setAttribute('aria-checked','false')});
+      b.classList.add('sel');b.setAttribute('aria-checked','true');
+      setTimeout(function(){go(nextOf(s))},190);
+    });
+    if(state[s.key]===o.v)b.classList.add('sel');
+    tiles.appendChild(b);
+  });
+  n.appendChild(tiles);
+  if(s.why)n.appendChild(el('<div class="why"><span aria-hidden="true">💡</span><span>'+s.why+'</span></div>'));
+  return n;
+}
+
+function renderMulti(s){
+  var n=el('<div class="pad anim"></div>');
+  n.appendChild(el('<h1 class="q">'+esc(resolve(s.q))+'</h1>'));
+  if(s.sub)n.appendChild(el('<p class="sub">'+esc(s.sub)+'</p>'));
+  var sel=new Set(state[s.key]||[]);
+  var tiles=el('<div class="tiles"></div>');
+  resolve(s.options).forEach(function(o){
+    var b=tileNode(o,{multi:true});
+    function paint(){var on=sel.has(o.v);b.classList.toggle('sel',on);b.setAttribute('aria-checked',on?'true':'false');}
+    b.addEventListener('click',function(){
+      if(o.v==='none'){sel.clear();sel.add('none');}
+      else{sel.delete('none');sel.has(o.v)?sel.delete(o.v):sel.add(o.v);}
+      Array.prototype.forEach.call(tiles.children,function(c,i){var vv=resolve(s.options)[i].v;var on=sel.has(vv);c.classList.toggle('sel',on);c.setAttribute('aria-checked',on?'true':'false');});
+      cta.disabled=sel.size===0;
+    });
+    paint();tiles.appendChild(b);
+  });
+  n.appendChild(tiles);
+  n.appendChild(el('<div class="spacer"></div>'));
+  var cta=el('<button class="cta" style="margin-top:18px">Continue <span aria-hidden="true">→</span></button>');
+  cta.disabled=sel.size===0;
+  cta.addEventListener('click',function(){state[s.key]=Array.from(sel);go(nextOf(s));});
+  n.appendChild(cta);
+  return n;
+}
+
+function renderMechanism(s){
+  var c=CONCERN[state.frustration];
+  var n=el('<div class="pad anim inter"></div>');
+  n.innerHTML=
+    '<div class="inter-emoji" aria-hidden="true">🔬</div>'+
+    '<h1>'+esc(c.mechTitle)+'</h1>'+
+    '<p>'+esc(c.mechBody)+'</p>'+
+    '<p class="soft"><span class="punch">'+esc(c.mechPunch)+'</span> This is why creams, box dye and touch-ups never really solved it.</p>'+
+    '<div class="refill"><div class="lab">The Lumière difference</div><p>'+esc(REFILL)+'</p></div>'+
+    '<div class="callout"><span class="e" aria-hidden="true">🌿</span><p><b>The good news:</b> this is fixable the moment you feed the strand instead of bleaching it. Your plan is almost ready.</p></div>'+
+    '<div class="spacer"></div>';
+  var cta=el('<button class="cta" style="margin-top:18px">Keep going <span aria-hidden="true">→</span></button>');
+  cta.addEventListener('click',function(){go(nextOf(s))});
+  n.appendChild(cta);
+  return n;
+}
+
+function renderReframe(s){
+  var v=state.dyeproblems, title,body;
+  if(v==='damage'||v==='scalp'){title="It was never your fault.";
+    body="Every product that dried your hair or stung your scalp was doing the same thing, prying the cuticle open and depositing harsh chemicals. The problem was the method, not you. There is a gentler way, and you are about to see it.";}
+  else if(v==='upkeep'){title="You are right, it adds up fast.";
+    body="Salon color runs a small fortune every few weeks, box dye is a mess every three, and root sprays rub off on your collar. That is real money and real time for something that still damages your hair. Lumière replaces all of it with your shampoo.";}
+  else{title="That is exactly the right instinct.";
+    body="The best gray coverage is the one you will actually keep up, the one that fits into what you already do. That is the whole idea here. Let us show you what it looks like for you.";}
+  var n=el('<div class="pad anim inter"></div>');
+  n.innerHTML='<div class="inter-emoji" aria-hidden="true">💗</div><h1>'+esc(title)+'</h1><p>'+esc(body)+'</p><div class="spacer"></div>';
+  var cta=el('<button class="cta" style="margin-top:16px">Continue <span aria-hidden="true">→</span></button>');
+  cta.addEventListener('click',function(){go(nextOf(s))});
+  n.appendChild(cta);return n;
+}
+
+function renderReassure(s){
+  var n=el('<div class="pad anim inter" style="text-align:center"></div>');
+  n.innerHTML=
+    '<div class="inter-emoji" aria-hidden="true">💪</div>'+
+    '<h1>You are in exactly the right place.</h1>'+
+    '<p class="soft">Over 40,000 women have covered their gray with Lumière, with no PPD, no peroxide, and no salon chair.</p>'+
+    '<div class="hero-media" style="margin-top:14px"><div class="ba">'+
+      '<div class="before"><span class="ph">Add photo</span><span class="tag">Before</span></div>'+
+      '<div class="after"><span class="ph">Add photo</span><span class="tag">After</span></div></div></div>'+
+    '<div class="reassure-num">89%</div>'+
+    '<p class="soft" style="margin-top:0">saw visible coverage within their first 3 washes.</p>'+
+    '<div class="spacer"></div>';
+  var cta=el('<button class="cta" style="margin-top:14px">Continue <span aria-hidden="true">→</span></button>');
+  cta.addEventListener('click',function(){go(nextOf(s))});
+  n.appendChild(cta);return n;
+}
+
+function renderQualify(s){
+  var sh=SHADES[state.shade]||{label:'your shade'};
+  var n=el('<div class="pad anim inter"></div>');
+  n.innerHTML=
+    '<div class="callout" style="background:var(--olive-soft)"><span class="e" aria-hidden="true">✅</span>'+
+      '<p><b>Great news, you qualify.</b> Lumière is PPD-free, resorcinol-free, peroxide-free and ammonia-free, dermatologically tested, and safe for sensitive scalps. It is matched to your '+esc(sh.label.toLowerCase())+' shade.</p></div>'+
+    '<div class="expert"><div class="av" aria-hidden="true">R</div><div><q>Lumière is one of the few gray-coverage options I recommend for clients who react to conventional dye. It deposits color without the chemistry that damages hair and irritates skin.</q>'+
+      '<div class="who"><b>Renske de Vries</b>, Trichologist <span style="opacity:.7">· sample expert, to confirm</span></div></div></div>'+
+    '<div class="spacer"></div>';
+  var cta=el('<button class="cta" style="margin-top:16px">See my results <span aria-hidden="true">→</span></button>');
+  cta.addEventListener('click',function(){go(nextOf(s))});
+  n.appendChild(cta);return n;
+}
+
+function renderLoader(s){
+  var steps=['Reading your gray-coverage profile','Matching your shade and hair type','Calibrating your coverage timeline','Building your personalized plan'];
+  var n=el('<div class="pad"><div class="loader"><h2 class="load-title">Building your personalized plan…</h2><div id="lsteps"></div><div class="lbar"><i id="lbar"></i></div></div></div>');
+  var host=$('#lsteps',n);
+  steps.forEach(function(t,i){host.appendChild(el('<div class="lstep" data-i="'+i+'"><span class="dot" aria-hidden="true">✓</span><span>'+esc(t)+'</span></div>'));});
+  var bar=$('#lbar',n);
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var per=reduce?350:900, i=0, nodes=host.children;
+  function step(){
+    if(i>0){nodes[i-1].classList.add('done');}
+    if(i<nodes.length){nodes[i].classList.add('on');bar.style.width=Math.round(((i+1)/nodes.length)*100)+'%';i++;setTimeout(step,per);}
+    else{setTimeout(function(){if(current==='loading')render(nextOf(s));},reduce?250:650);}
+  }
+  setTimeout(step,reduce?150:400);
+  return n;
+}
+
+/* ---------- results ---------- */
+function severityDot(v){return v==='mild'?'var(--good)':v==='moderate'?'var(--warn)':'var(--crit)';}
+function severityLabel(v){return v.charAt(0).toUpperCase()+v.slice(1);}
+function timeline(){
+  var g=state.graylevel, sev=state.severity;
+  var slow = (g==='full') || (g==='half'&&sev==='severe') || (sev==='severe'&&g!=='start');
+  var fast = (g==='start'||g==='salt') && (sev==='mild'||sev==='moderate');
+  if(fast) return [
+    ['Wash 1 to 2','First soft coverage appears, tone starts to even, and your hair already feels conditioned.'],
+    ['Around week 1','Grays are noticeably blended and any brassy warmth is gone.'],
+    ['Week 2 to 3','Full, natural-looking coverage. Switch to 2 to 3 washes a week to hold it.']];
+  if(slow) return [
+    ['Week 1','Pigment starts depositing and the gray begins to soften with each wash.'],
+    ['Week 2 to 3','Coverage builds visibly, wash by wash, and the tone evens out.'],
+    ['Week 4 to 6','Full coverage on even the most resistant gray. Maintain about 3 washes a week. Your 90-day guarantee covers the whole journey.']];
+  return [
+    ['Wash 1 to 3','First coverage appears and your hair feels softer and conditioned.'],
+    ['Week 1 to 2','Coverage builds and deepens, and the tone evens out.'],
+    ['Week 3 to 4','Full, natural-looking coverage. This is when most women say they feel like themselves again. Maintain 2 to 3 times a week.']];
+}
+function urgencyBlock(){
+  var e=state.event;
+  if(e==='soon')return '<div class="urg fast"><span aria-hidden="true">⚡</span><div><b>Fast-track.</b> Based on your timeline, start now and you can see real coverage before your event.</div></div>';
+  if(e==='months')return '<div class="urg time"><span aria-hidden="true">🎯</span><div><b>Perfect timing.</b> Start today and you will be fully covered well before it.</div></div>';
+  return '<div class="urg now"><span aria-hidden="true">🌱</span><div><b>The best time to start is today.</b> Every wash from here builds your coverage.</div></div>';
+}
+function cmpTable(){
+  var rows=[
+    ['Covers gray','<span class="yes">Yes</span>','<span class="yes">Yes</span>','<span class="yes">Yes</span>','<span class="mid">Sits on top</span>'],
+    ['No PPD, peroxide or ammonia','<span class="yes">Yes</span>','<span class="no">No</span>','<span class="no">No</span>','<span class="yes">Yes</span>'],
+    ['Repairs & conditions as it colors','<span class="yes">Yes</span>','<span class="no">No</span>','<span class="no">No</span>','<span class="no">No</span>'],
+    ['Grows out soft, no harsh line','<span class="yes">Yes</span>','<span class="no">No</span>','<span class="no">No</span>','<span class="mid">Rubs off</span>'],
+    ['Lasts through washing','<span class="yes">Yes</span>','<span class="yes">Yes</span>','<span class="yes">Yes</span>','<span class="no">No</span>'],
+    ['Fits your shower, no extra step','<span class="yes">Yes</span>','<span class="no">No</span>','<span class="no">No</span>','<span class="no">No</span>'],
+    ['Cost over a year','<span class="yes">Low</span>','<span class="mid">High</span>','<span class="no">Very high</span>','<span class="mid">Medium</span>']
+  ];
+  var h='<div class="tbl-wrap"><table class="cmp"><thead><tr><th></th><th class="brand">Lumière</th><th>Box dye</th><th>Salon</th><th>Root spray</th></tr></thead><tbody>';
+  rows.forEach(function(r){h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>';});
+  return h+'</tbody></table></div>';
+}
+function renderResults(){
+  var c=CONCERN[state.frustration], sh=SHADES[state.shade]||{label:'Your shade'}, g=GRAY[state.graylevel]||{label:'-'};
+  var n=el('<div style="display:flex;flex-direction:column;min-height:100%"></div>');
+  var pad=el('<div class="pad anim" style="padding-bottom:8px"></div>');
+  var tl=timeline().map(function(r){return '<div class="row"><div class="rail"><div class="node"></div><div class="line"></div></div><div class="txt"><div class="when">'+r[0]+'</div><div class="what">'+esc(r[1])+'</div></div></div>';}).join('');
+  pad.innerHTML=
+    '<div class="res-hero"><span class="badge">Your plan is ready</span>'+
+      '<h1>Your Gray-Coverage Profile</h1><p>Built from your answers. Here is exactly what to expect.</p></div>'+
+    '<div class="card"><h3>Your profile</h3>'+
+      '<div class="profile-row"><span class="k">Main concern</span><span class="v">'+esc(c.label)+'</span></div>'+
+      '<div class="profile-row"><span class="k">Severity</span><span class="v"><span class="dot-sev" style="background:'+severityDot(state.severity)+'"></span>'+severityLabel(state.severity)+'</span></div>'+
+      '<div class="profile-row"><span class="k">Gray level</span><span class="v">'+esc(g.label)+'</span></div>'+
+      '<div class="profile-row"><span class="k">Shade match</span><span class="v"><span class="swatch" style="width:16px;height:16px;background:'+(sh.c||'#888')+'"></span>Confirmed for '+esc(sh.label)+'</span></div>'+
+      '<div class="profile-row"><span class="k">Recommended</span><span class="v" style="color:var(--accent-ink)">Lumière 4-in-1 Shampoo</span></div>'+
+    '</div>'+
+    '<div class="card"><h3>Your personalized timeline</h3><div class="tl">'+tl+'</div></div>'+
+    '<div class="card mech"><h3>How Lumière fixes your '+esc(c.noun)+'</h3><p>'+esc(c.resFix)+'</p></div>'+
+    '<div class="card"><h3>Why it works when nothing else has</h3>'+cmpTable()+'</div>'+
+    '<div class="guarantee"><span class="e" aria-hidden="true">🔒</span><div><b>90-Day Covered-or-it-is-Free Guarantee.</b><p>If your gray is not covered to your satisfaction, you get a full refund and you keep the bottle. That is how sure we are.</p></div></div>'+
+    '<div class="offer"><h3>Your personalized starter plan</h3><ul>'+
+      '<li><span class="c">✓</span><span><b>50% off</b> your first Lumière bundle</span></li>'+
+      '<li><span class="c">✓</span><span><b>Free</b> personal Shade-Match guide</span></li>'+
+      '<li><span class="c">✓</span><span><b>Free</b> Gray-Blending how-to for your hair type</span></li>'+
+      '<li><span class="c">✓</span><span><b>Free</b> 90-day results tracker</span></li>'+
+      '<li><span class="c">✓</span><span><b>Free</b> shipping</span></li>'+
+    '</ul>'+urgencyBlock()+
+    '<p class="scarce">⚠️ This quiz discount is reserved for the next 15 minutes.</p></div>'+
+    '<p class="footnote">Sample pricing and expert shown for preview. Final offer, guarantee terms and specialist to be confirmed.</p>';
+  n.appendChild(pad);
+  var sticky=el('<div class="sticky-cta"></div>');
+  var cta=el('<button class="cta">Claim my plan & 50% off <span aria-hidden="true">→</span></button>');
+  cta.addEventListener('click',function(){cta.innerHTML='Redirecting to checkout…';setTimeout(function(){cta.innerHTML='Claim my plan &amp; 50% off <span aria-hidden="true">→</span>';},1400);});
+  sticky.appendChild(cta);
+  n.appendChild(sticky);
+  return n;
+}
+
+/* ---------- nav + theme ---------- */
+backEl.addEventListener('click',function(){if(hist.length){var prev=hist.pop();render(prev);}});
+$('#theme').addEventListener('click',function(){
+  var root=document.documentElement;
+  var cur=root.getAttribute('data-theme');
+  if(!cur){cur=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+  root.setAttribute('data-theme',cur==='dark'?'light':'dark');
+});
+
+render('start');
+})();
+</script>
+
+</body>
+</html>
