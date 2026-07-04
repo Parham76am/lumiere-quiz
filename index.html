@@ -267,7 +267,7 @@ var current=null;
 
 /* ---------- concern content ---------- */
 var CONCERN={
-  fade:{label:"Fades, roots back fast",noun:"fading coverage",sevQ:"How bad is the fading?",
+  fade:{label:"Fading and fast roots",noun:"fading coverage",sevQ:"How bad is the fading?",
     sev:{mild:"It holds a couple of weeks before the gray creeps back.",
          moderate:"Within a week the gray is showing again at my part.",
          severe:"A wash or two, and the gray is basically back."},
@@ -275,7 +275,7 @@ var CONCERN={
     mechBody:"Most gray shampoos just coat the outside of the strand, so every wash rinses more away and the gray creeps back. Box dye goes the other way, cracking the strand open with peroxide to force color in. That holds longer, but it leaves a hard line at your roots and a strand so damaged the color fades unevenly anyway.",
     mechPunch:"The color was never really locked into your hair.",
     resFix:"Lumière's plant pigment binds to the strand and layers with every wash, so coverage builds and holds instead of rinsing out, and new growth blends in softly with no hard root line."},
-  cover:{label:"Won't cover stubborn grays",noun:"stubborn grays",sevQ:"How stubborn are your grays?",
+  cover:{label:"Patchy coverage on stubborn grays",noun:"stubborn grays",sevQ:"How stubborn are your grays?",
     sev:{mild:"A few stubborn grays resist, the rest take fine.",
          moderate:"The wiry grays around my part and temples never fully take.",
          severe:"Most of my gray barely covers, no matter what I use."},
@@ -283,7 +283,7 @@ var CONCERN={
     mechBody:"Stubborn gray is coarse, and its cuticle sits tight and closed, so a surface shampoo cannot lay down enough pigment to cover it. Harsh box dye tries to force its way in with peroxide, which over-processes the rest of your hair just to catch those few grays.",
     mechPunch:"You should not have to fry your whole head to catch the stubborn ones.",
     resFix:"Because coverage builds a little with every wash, even the wiry, resistant grays around your part and temples fill in gradually over time, instead of being left behind."},
-  brass:{label:"Turns orange or brassy",noun:"brassy tones",sevQ:"How brassy does it get?",
+  brass:{label:"Brassy, orange tones",noun:"brassy tones",sevQ:"How brassy does it get?",
     sev:{mild:"A slightly warm tone in certain light.",
          moderate:"Clearly warm or orange within a week or two.",
          severe:"It goes orange almost right away and never looks like me."},
@@ -291,7 +291,7 @@ var CONCERN={
     mechBody:"Oxidative box and salon dyes lift and bleach the strand before they deposit color. As that harsh color fades on damaged hair, the warm undertones underneath show through, and gray grabs them worst of all. That is the brass, and the orange.",
     mechPunch:"Brass is a symptom of a stripped, oxidized strand.",
     resFix:"There is no lift and no oxidation, so there is nothing to turn warm. Lumière lays down true-to-tone plant pigment that reads like your real color on gray. No orange, no brass, no helmet."},
-  damage:{label:"Left my hair dry and damaged",noun:"dye damage",sevQ:"How damaged is your hair?",
+  damage:{label:"Dry, damaged hair",noun:"dye damage",sevQ:"How damaged is your hair?",
     sev:{mild:"A little dryness at the ends.",
          moderate:"Noticeably dry and rough, it lost its softness and shine.",
          severe:"Straw-like, brittle and snapping. Years of dye wrecked it."},
@@ -299,7 +299,7 @@ var CONCERN={
     mechBody:"To lift the gray, dye uses peroxide and ammonia to crack the strand open and bleach it. They do not stop at the gray. They burn through the protein that holds the strand together, and the inside goes hollow, like a straw. That hollow strand is why dyed hair turns dry, brittle, and snaps off in the brush.",
     mechPunch:"The damage is the dye, not your hair.",
     resFix:"Every wash lays plant pigment over the gray while liquid keratin and collagen flood the hollow strand and pack it back out. You cover the gray and rebuild the hair in the same wash, so it comes out stronger than it went in."},
-  scalp:{label:"Irritates my scalp, or scares me",noun:"scalp irritation",sevQ:"How badly does your scalp react to dye?",
+  scalp:{label:"Scalp irritation",noun:"scalp irritation",sevQ:"How badly does your scalp react to dye?",
     sev:{mild:"A little tingle or itch while it is on.",
          moderate:"Real itching or burning, and I dread the irritation after.",
          severe:"My scalp reacts badly every time, and I worry about the chemicals."},
@@ -334,11 +334,11 @@ var SCREENS={
     options:[{v:'u35',lab:'Under 35'},{v:'35',lab:'35 to 44'},{v:'45',lab:'45 to 54'},{v:'55',lab:'55 to 64'},{v:'65',lab:'65 or older'}],next:'frustration'},
   frustration:{type:'single',p:23,key:'frustration',q:'When you cover your gray, what bothers you most?',
     options:[
-      {v:'fade',emoji:'💧',lab:'It fades, and the roots come back fast',desc:'The color washes out, and the gray is back within a week'},
-      {v:'cover',emoji:'⚪',lab:'It won\'t cover my stubborn grays',desc:'The wiry, resistant grays at my part and temples still show'},
-      {v:'brass',emoji:'🍊',lab:'It turns orange or brassy',desc:'The color goes warm and off, never my real shade'},
-      {v:'damage',emoji:'🌾',lab:'It left my hair dry and damaged',desc:'Years of dye made it straw-like, dry and breaking'},
-      {v:'scalp',emoji:'🔥',lab:'It irritates my scalp, or scares me',desc:'Itching, burning, or worry about the chemicals'}
+      {v:'fade',emoji:'💧',lab:'Fading, and fast-returning roots',desc:'The color washes out, and the gray is back within a week'},
+      {v:'cover',emoji:'⚪',lab:'Patchy coverage on stubborn grays',desc:'The wiry, resistant grays at my part and temples still show'},
+      {v:'brass',emoji:'🍊',lab:'Brassy, orange tones',desc:'The color goes warm and off, never my real shade'},
+      {v:'damage',emoji:'🌾',lab:'Dry, damaged hair',desc:'Years of dye left it straw-like, dry and breaking'},
+      {v:'scalp',emoji:'🔥',lab:'Scalp irritation and harsh chemicals',desc:'Itching, burning, or worry about what is in the dye'}
     ],next:'severity'},
   severity:{type:'single',p:31,key:'severity',
     q:function(){return CONCERN[state.frustration].sevQ;},
