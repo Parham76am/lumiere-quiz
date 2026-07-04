@@ -357,7 +357,7 @@ var SCREENS={
   mechanism:{type:'mechanism',p:50,next:'tried'},
   tried:{type:'multi',p:57,key:'tried',q:'What have you used to cover your gray so far?',sub:'Select all that apply.',
     options:[{v:'box',emoji:'📦',lab:'Box dye at home'},{v:'salon',emoji:'💈',lab:'Salon color'},
-      {v:'spray',emoji:'🪄',lab:'Root touch-up spray or powder'},{v:'grayshampoo',emoji:'🧴',lab:'A gray-coverage shampoo (like Polar)'},
+      {v:'spray',emoji:'🪄',lab:'Root touch-up spray or powder'},{v:'grayshampoo',emoji:'🧴',lab:'A gray-coverage shampoo'},
       {v:'henna',emoji:'🌿',lab:'Henna'},{v:'none',emoji:'🚫',lab:'Nothing yet'}],next:'dyeproblems'},
   dyeproblems:{type:'single',p:63,key:'dyeproblems',q:'Has dyeing ever caused you problems?',
     options:[{v:'damage',emoji:'🥀',lab:'Yes, it dried out or damaged my hair'},
@@ -426,9 +426,9 @@ function nextOf(s){return resolve(s.next);}
 function renderStart(){
   var n=el('<div class="pad anim"></div>');
   n.innerHTML=
-    '<p class="eyebrow">Plant-pigment gray coverage</p>'+
-    '<h1 class="q">See how fast Lumière covers your gray. Without a drop of PPD or peroxide.</h1>'+
-    '<p class="sub">Answer a few quick questions and we will build your personal gray-coverage plan: your shade match, what to expect, and how fast you will see it.</p>'+
+    '<p class="eyebrow">The 60-second gray-coverage quiz</p>'+
+    '<h1 class="q">Cover your gray without the damage, the orange, or the harsh chemicals.</h1>'+
+    '<p class="sub">Answer a few quick questions and we will build your personal Lumière plan: your shade match, what to expect, and how fast you will see it.</p>'+
     '<div class="hero-media"><div class="ba">'+
       '<div class="before"><span class="ph">Add photo</span><span class="tag">Before</span></div>'+
       '<div class="after"><span class="ph">Add photo</span><span class="tag">After · 3 weeks</span></div>'+
